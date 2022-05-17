@@ -1,0 +1,48 @@
+# **Variance, Covariance, and Correlation**
+
+!pip install yfinance --upgrade --no-cache-dir
+
+import numpy as np
+
+import warnings
+warnings.filterwarnings("ignore") 
+
+# yfinance is used to fetch data 
+import yfinance as yf
+yf.pdr_override()
+
+symbol = 'AMD'
+market = '^GSPC'
+start = '2021-01-01'
+end = '2022-01-01'
+
+# Read data 
+dataset = yf.download(symbol,start,end)['Adj Close']
+benchmark = yf.download(market,start,end)['Adj Close']
+
+# View Columns
+dataset.head()
+
+benchmark.head()
+
+**Variance**
+
+variance = ((dataset - dataset.mean())**2).sum() / len(dataset)
+print("The Variance for " + symbol + ":", variance)
+
+covariance = ((dataset - dataset.mean()) * (dataset - dataset.mean())).sum() / (len(dataset) - 1)
+
+print("The Covariance for " + symbol + ":", covariance)
+
+**Correlation coeffiecient**
+
+upper = ((dataset - dataset.mean()) * (benchmark - benchmark.mean())).sum()
+lower = np.sqrt((((dataset - dataset.mean())**2).sum()) * (((benchmark - benchmark.mean())**2).sum()))
+
+correlation_coefficient = upper/lower
+
+print("The Correlation Coefficient for " + symbol + ":", correlation_coefficient)
+
+r_square = correlation_coefficient**2
+
+print("The R-Square for " + symbol + ":", r_square)
